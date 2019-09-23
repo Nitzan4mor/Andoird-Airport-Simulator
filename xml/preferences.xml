@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <EditTextPreference
+        android:title="latest landed flights"
+        android:key="@string/PREFERENCES_LATEST_FLIGHTS_KEY"
+        android:summary="Please provide time filter"
+        ></EditTextPreference>
+
+    <CheckBoxPreference
+        android:title="show only flights that landed"
+        android:defaultValue="false"
+        android:key="@string/PREFERENCES_LANDED_FLIGHTS_KEY" />
+
+    <CheckBoxPreference
+        android:title="show only delayed flights"
+        android:defaultValue="false"
+        android:key="@string/PREFERENCES_DELAYED_FLIGHTS_KEY" />
+
+
+</PreferenceScreen>

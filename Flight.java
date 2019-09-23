@@ -1,5 +1,6 @@
 package com.example.airport_project_nitzan_mor;
 
+// pojo class for communicating with the FireBase database
 public class Flight {
     private String airlineLogo;
     private String flightNumber;

@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 
+// our settings fragment activity
+// in this activity we will be able to see and change the settings
+// that was defined the preferences.xml file
 public class FlightPreferencesActivity extends PreferenceActivity {
 
     @Override

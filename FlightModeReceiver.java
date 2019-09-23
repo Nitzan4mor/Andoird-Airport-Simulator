@@ -8,6 +8,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
 
+// our broadcast receiver class that change the application display
+// in our case, each time the flight mode is changed, we will if it's on or off
+// and change the app display accordingly
 public class FlightModeReceiver extends BroadcastReceiver {
 
     private MainActivity _mainActivity;

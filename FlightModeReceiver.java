@@ -39,9 +39,7 @@ public class FlightModeReceiver extends BroadcastReceiver {
             _mainActivity.flights_LV.setBackgroundColor(Color.WHITE);
             _mainActivity.flights_LV.setEnabled(true);
         }
-
-
-
-
     }
+
+
 }

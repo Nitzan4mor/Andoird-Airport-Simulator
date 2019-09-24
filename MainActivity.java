@@ -21,9 +21,11 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,7 +48,10 @@ public class MainActivity extends AppCompatActivity {
 
         // registering new broadcast receiver that listen for each time the flight mode is changed
         IntentFilter intentFilter = new IntentFilter("android.intent.action.AIRPLANE_MODE");
-        getBaseContext().registerReceiver(new FlightModeReceiver(this), intentFilter);
+
+        getBaseContext().
+
+                registerReceiver(new FlightModeReceiver(this), intentFilter);
 
         // setting our flight adapter
         setAdapter();
@@ -86,7 +91,44 @@ public class MainActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Flight flight = snapshot.getValue(Flight.class);
 
+                    //creating connection to our setting preferences
                     SharedPreferences flightPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+
+                    //pulling from setting preferences - the display landed flights by time filter
+                    // checking if it's different than the default value of 0
+                    // if it's different than 0 and the current Flight Object from the data base
+                    // has status of "landing" then we use Calender to receive the current time
+                    // in hours and in minutes and convert it to total time in minutes (hours * 60 + minutes)
+                    // pull the current Flight final landing time and use String.split in order to get
+                    // the hour and minutes separated and put them into int variables
+                    // convert it to total time in minutes (hours * 60 + minutes)
+                    // and check if the landing time is smaller than the current time
+                    // and bigger than the current time - time factor
+                    int landedFlightsFilter = Integer.parseInt(flightPreferences.
+                            getString(getString(R.string.PREFERENCES_LATEST_FLIGHTS_KEY), "0"));
+                    if (landedFlightsFilter != 0) {
+                        if (!flight.getFlightStatus().equals(getString(R.string.FLIGHT_STATUS_LANDED))) {
+                            continue;
+                        }
+                        Calendar CurrentTime = Calendar.getInstance();
+                        int currentHour = CurrentTime.get(Calendar.HOUR_OF_DAY);
+                        int currentMinute = CurrentTime.get(Calendar.MINUTE);
+                        int currentTimeInMinutes = (currentHour * 60 + currentMinute);
+                        int currentTimeMinusFilter = currentTimeInMinutes - (landedFlightsFilter * 60);
+                        String landingTime = flight.getFinalLandingTime();
+                        String[] hourAndMinute = landingTime.split(":");
+                        int landingHour = Integer.valueOf(hourAndMinute[0]);
+                        int landingMinute = Integer.valueOf(hourAndMinute[1]);
+                        int totalLandingTime = landingHour * 60 + landingMinute;
+                        if (totalLandingTime > currentTimeMinusFilter && totalLandingTime < currentTimeInMinutes) {
+                            adapter.add(flight);
+                        }
+                        continue;
+                    }
+
+                    //pulling from setting preferences - 2 booleans which represents the display settings chosen
+                    // check 4 possible scenarios - (false, false) , (true, true) , (true ,false) , (false, true)
+                    // and add only the Flight Objects that has the same fields as the display preferences
                     boolean showOnlyLandedFlights = flightPreferences.getBoolean(
                             getString(R.string.PREFERENCES_LANDED_FLIGHTS_KEY), false);
                     boolean showOnlyDelayedFlights = flightPreferences.getBoolean(

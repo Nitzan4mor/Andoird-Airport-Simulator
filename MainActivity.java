@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -21,7 +20,6 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -35,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Flight> flights = new ArrayList<>();
     private Toolbar toolbar;
     private ListView flights_LV;
-    private boolean isSearchOn;
 
 
     @Override
@@ -130,21 +127,20 @@ public class MainActivity extends AppCompatActivity {
                     // and add only the Flight Objects that has the same fields as the display preferences
                     boolean showOnlyLandedFlights = flightPreferences.getBoolean(
                             getString(R.string.PREFERENCES_LANDED_FLIGHTS_KEY), false);
-                    boolean showOnlyDelayedFlights = flightPreferences.getBoolean(
-                            getString(R.string.PREFERENCES_DELAYED_FLIGHTS_KEY), false);
-                    if (!showOnlyLandedFlights && !showOnlyDelayedFlights) {
+                    boolean showOnlyNotLandedFlights = flightPreferences.getBoolean(
+                            getString(R.string.PREFERENCES_FLYING_FLIGHTS_KEY), false);
+                    if ((!showOnlyLandedFlights && !showOnlyNotLandedFlights) || (showOnlyLandedFlights && showOnlyNotLandedFlights)) {
                         adapter.add(flight);
-                    } else if (showOnlyLandedFlights && showOnlyDelayedFlights) {
-                        if (!flight.getFlightStatus().equals(getString(R.string.FLIGHT_STATUS_INFLIGHT))) {
-                            adapter.add(flight);
-                        }
                     } else if (showOnlyLandedFlights) {
                         if (flight.getFlightStatus().equals(getString(R.string.FLIGHT_STATUS_LANDED))) {
                             adapter.add(flight);
                         }
-
-                    } else if (showOnlyDelayedFlights) {
-                        if (flight.getFlightStatus().equals(getString(R.string.FLIGHT_STATUS_DELAYES))) {
+                        // the else if() condition below can be replaced with else{}
+                        // because if we get to this stage it will always be true
+                        // but in my opinion it will more organised and
+                        // easier to understand that way
+                    } else if (showOnlyNotLandedFlights) {
+                        if (!flight.getFlightStatus().equals(getString(R.string.FLIGHT_STATUS_LANDED))) {
                             adapter.add(flight);
                         }
                     }

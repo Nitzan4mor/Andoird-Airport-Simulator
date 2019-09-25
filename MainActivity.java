@@ -34,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
     private FlightsAdapter adapter;
     private ArrayList<Flight> flights = new ArrayList<>();
     private Toolbar toolbar;
-    public ListView flights_LV;
+    private ListView flights_LV;
+    private boolean isSearchOn;
 
 
     @Override
@@ -49,11 +50,9 @@ public class MainActivity extends AppCompatActivity {
         // registering new broadcast receiver that listen for each time the flight mode is changed
         IntentFilter intentFilter = new IntentFilter("android.intent.action.AIRPLANE_MODE");
 
-        getBaseContext().
+        getBaseContext().registerReceiver(new FlightModeReceiver(this), intentFilter);
 
-                registerReceiver(new FlightModeReceiver(this), intentFilter);
-
-        // setting our flight adapter
+        // setting our flight adapter and connecting it to the list view
         setAdapter();
 
         // communicating with the FireBase database, more explanation on how it works in the method
@@ -64,8 +63,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(MainActivity.this , FlightSearchActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -191,4 +190,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public ListView getFlights_LV() {
+        return flights_LV;
+    }
 }

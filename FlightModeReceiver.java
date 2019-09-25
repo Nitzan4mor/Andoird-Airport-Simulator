@@ -14,8 +14,8 @@ import android.widget.Toast;
 public class FlightModeReceiver extends BroadcastReceiver {
 
     private MainActivity _mainActivity;
-    public FlightModeReceiver(MainActivity mainActivity)
-    {
+
+    public FlightModeReceiver(MainActivity mainActivity) {
         _mainActivity = mainActivity;
     }
 
@@ -27,19 +27,18 @@ public class FlightModeReceiver extends BroadcastReceiver {
 
         Toast.makeText(context, "Flight mode Changed!", Toast.LENGTH_SHORT).show();
         boolean isAirplaneModeOn = intent.getBooleanExtra("state", false);
-        if(isAirplaneModeOn){
+        if (isAirplaneModeOn) {
 
             // handle Airplane Mode on
-            _mainActivity.flights_LV.setAlpha(0.75f);
-            _mainActivity.flights_LV.setBackgroundColor(Color.GRAY);
-            _mainActivity.flights_LV.setEnabled(false);
+            _mainActivity.getFlights_LV().setAlpha(0.75f);
+            _mainActivity.getFlights_LV().setBackgroundColor(Color.GRAY);
+            _mainActivity.getFlights_LV().setEnabled(false);
         } else {
             // handle Airplane Mode off
-            _mainActivity.flights_LV.setAlpha(1f);
-            _mainActivity.flights_LV.setBackgroundColor(Color.WHITE);
-            _mainActivity.flights_LV.setEnabled(true);
+            _mainActivity.getFlights_LV().setAlpha(1f);
+            _mainActivity.getFlights_LV().setBackgroundColor(Color.WHITE);
+            _mainActivity.getFlights_LV().setEnabled(true);
         }
     }
-
 
 }

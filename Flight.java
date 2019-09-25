@@ -13,6 +13,10 @@ public class Flight {
     public Flight() {
     }
 
+    public Flight(String departureCity) {
+        this.departureCity = departureCity;
+    }
+
     public String getAirlineLogo() {
         return airlineLogo;
     }

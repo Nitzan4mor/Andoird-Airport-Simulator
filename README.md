@@ -1,31 +1,15 @@
 # 23_09-Final-Project-Airport-Nitzan-Mor
 
-FIRE BASE URL - https://console.firebase.google.com/project/airport-project-nitzan-mor/database/airport-project-nitzan-mor/data/airport
+Nitzan Mor final Android project app - Airport.
 
-FireBase fields - 
+the app as the following features -
 
-airlineLogo
+1. the app is connected to a database in FireBase with the following URL -  
 
-departureAirport
+https://console.firebase.google.com/project/airport-project-nitzan-mor/database/airport-project-nitzan-mor/data/airport
 
-departureCity
+the database fields are - 
 
-expectedLandingTime
+airlineLogo , departureAirport , departureCity , expectedLandingTime , finalLandingTime , flightNumber , flightStatus
 
-finalLandingTime
-
-flightNumber
-
-
-flightStatus
-
-
-airlineLogo fields in FireBase -
-
-DL
-
-TG
-
-IB
-
-AZ
+the airlines i used are - DL , TG ,IB , AZ

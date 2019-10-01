@@ -38,3 +38,5 @@ the app as the following features -
   - when a city is clicked, it will display all of the flights from the chosen city
   - if a flight from the chosen city is added or removed in the database, it will be shown accordingly in the app
   - a return button that allows you to go back to the Main Activity
+  
+  ** all of the Java code have notes with explanations **

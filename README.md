@@ -28,3 +28,5 @@ the app as the following features -
   - show only flights that have landed
   - show only flights that have not landed yet
   - show only fligts that have landed using a time filter
+  
+ 5. the app have a Receiver that is connected to the Device airplane mode and will "freeze" the screen if the airplane mode is on

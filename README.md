@@ -12,7 +12,7 @@ the app as the following features -
   the airlines i used are - DL , TG ,IB , AZ
   
   
- 2.the app display the flights data from the database using Listview and Adapter which is customise to show the relevant fields
+ 2 .the app display the flights data from the database using Listview and Adapter which is customise to show the relevant fields
   of each specific data, for example:
   if a flight is not landed yet, the flight status color will be different according to the flight status
   and the flight arrival time won't be showed.

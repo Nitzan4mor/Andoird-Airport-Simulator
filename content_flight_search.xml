@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".MainActivity"
-    tools:showIn="@layout/activity_main"
+    tools:context=".FlightSearchActivity"
+    tools:showIn="@layout/activity_flight_search"
     android:orientation="vertical">
 
     <ListView
-        android:id="@+id/MainActivity_flights_LV"
+        android:id="@+id/FlightSearchActivity_searchFlights_LV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:transcriptMode="alwaysScroll" />

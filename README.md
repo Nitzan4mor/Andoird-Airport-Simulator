@@ -22,4 +22,6 @@ the app as the following features -
 
 
 4. the app has a setting menu that allows you to chose the following preferences -
-  a. 
+  -show only flights that have landed
+  -show only flights that have not landed yet
+  - 

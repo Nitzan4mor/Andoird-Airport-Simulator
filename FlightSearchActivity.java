@@ -23,7 +23,7 @@ import java.util.HashSet;
 public class FlightSearchActivity extends AppCompatActivity {
 
     //declare on the fields that we going to use in the FlightSearchActivity
-    private ListView searchFlights_LV;
+    private ListView FlightSearchActivity_searchFlights_LV;
     private FlightsAdapter adapter;
     private ArrayList<Flight> flights = new ArrayList<>();
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -47,7 +47,7 @@ public class FlightSearchActivity extends AppCompatActivity {
         // and assign it to our searchChosenCity String
         // make sure the String in not null and call the method that will display only the
         // flights that departed from that specific city from the data base
-        searchFlights_LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        FlightSearchActivity_searchFlights_LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 searchChosenCity = flights.get(i).getDepartureCity();
@@ -61,25 +61,21 @@ public class FlightSearchActivity extends AppCompatActivity {
         });
 
         // return to main activity button, when clicked will finish the intent
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton return_Btn = findViewById(R.id.FlightSearchActivity_return_Btn);
+        return_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 searchChosenCity = null;
                 finish();
             }
         });
-
-
-
     }
-
 
     // giving values to our list view and adapter and connecting them
     private void setAdapter() {
         adapter = new FlightsAdapter(this, R.layout.flights_list_view_layout, flights);
-        searchFlights_LV = findViewById(R.id.searchFlights_LV);
-        searchFlights_LV.setAdapter(adapter);
+        FlightSearchActivity_searchFlights_LV = findViewById(R.id.FlightSearchActivity_searchFlights_LV);
+        FlightSearchActivity_searchFlights_LV.setAdapter(adapter);
     }
 
     // we clear the adapter so it won't show duplicated data
@@ -89,7 +85,7 @@ public class FlightSearchActivity extends AppCompatActivity {
     // over the HashSet and add the data from the HashSet to the adapter
     // so only the departure city will be shown inside list view
     // that was we can use the same FlightAdapter class we made and the same Layout
-    private void getCitiesFromFireBase(){
+    private void getCitiesFromFireBase() {
         database.getReference().child(getString(R.string.TABLE_NAME)).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -102,9 +98,10 @@ public class FlightSearchActivity extends AppCompatActivity {
                 for (String city : cityFilter) {
                     adapter.add(new Flight(city));
                 }
-                Toast.makeText(FlightSearchActivity.this,
-                        "click on the city to display flights", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(FlightSearchActivity.this,
+//                        "click on the city to display flights", Toast.LENGTH_SHORT).show();
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Toast.makeText(FlightSearchActivity.this,
@@ -125,11 +122,12 @@ public class FlightSearchActivity extends AppCompatActivity {
                 adapter.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Flight flight = snapshot.getValue(Flight.class);
-                    if (flight.getDepartureCity().equals(searchChosenCity)){
+                    if (flight.getDepartureCity().equals(searchChosenCity)) {
                         adapter.add(flight);
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Toast.makeText(FlightSearchActivity.this,

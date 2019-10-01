@@ -3,6 +3,7 @@ package com.example.airport_project_nitzan_mor;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -16,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private FlightsAdapter adapter;
     private ArrayList<Flight> flights = new ArrayList<>();
     private Toolbar toolbar;
-    private ListView flights_LV;
+    private ListView MainActivity_flights_LV;
 
 
     @Override
@@ -55,12 +57,13 @@ public class MainActivity extends AppCompatActivity {
         // communicating with the FireBase database, more explanation on how it works in the method
         getFlightsAndShowByPreferences();
 
-        // NOT IN USE - YET
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        // search button by city of departure
+        // when clicked will start new Intent to the FlightSearchActivity
+        FloatingActionButton MainActivity_search_Btn = findViewById(R.id.MainActivity_search_Btn);
+        MainActivity_search_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this , FlightSearchActivity.class);
+                Intent intent = new Intent(MainActivity.this, FlightSearchActivity.class);
                 startActivity(intent);
             }
         });
@@ -75,15 +78,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // creating value event listener for each change in the FireBase database
-    // each time the listener is activated, we will clear the adapter so won't show duplicated data
+    // each time the listener is activated, we will clear the adapter so it won't show duplicated data
     // we iterate over the data received from the data base, get the setting preferences
-    // check the condition values and customise the data we will add to our flight adapter
-    // using if and else if conditions
+    // check the condition values and customise the data displayed according
+    // to the settings chosen using if and else if conditions
+    // and adding only the relevant data to our flight adapter
     private void getFlightsAndShowByPreferences() {
         database.getReference().child(getString(R.string.TABLE_NAME)).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 adapter.clear();
+
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Flight flight = snapshot.getValue(Flight.class);
 
@@ -100,8 +105,13 @@ public class MainActivity extends AppCompatActivity {
                     // convert it to total time in minutes (hours * 60 + minutes)
                     // and check if the landing time is smaller than the current time
                     // and bigger than the current time - time factor
-                    int landedFlightsFilter = Integer.parseInt(flightPreferences.
-                            getString(getString(R.string.PREFERENCES_LATEST_FLIGHTS_KEY), "0"));
+                    int landedFlightsFilter = 0;
+                    try {
+                        landedFlightsFilter = Integer.parseInt(flightPreferences.
+                                getString(getString(R.string.PREFERENCES_LATEST_FLIGHTS_KEY), "0"));
+                    }catch (Exception e){
+                        Log.e("MainActivity" , e.getMessage());
+                    }
                     if (landedFlightsFilter != 0) {
                         if (!flight.getFlightStatus().equals(getString(R.string.FLIGHT_STATUS_LANDED))) {
                             continue;
@@ -157,8 +167,8 @@ public class MainActivity extends AppCompatActivity {
     // giving values to our list view and adapter and connecting them
     private void setAdapter() {
         adapter = new FlightsAdapter(this, R.layout.flights_list_view_layout, flights);
-        flights_LV = findViewById(R.id.flights_LV);
-        flights_LV.setAdapter(adapter);
+        MainActivity_flights_LV = findViewById(R.id.MainActivity_flights_LV);
+        MainActivity_flights_LV.setAdapter(adapter);
     }
 
     @Override
@@ -187,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public ListView getFlights_LV() {
-        return flights_LV;
+        return MainActivity_flights_LV;
     }
+
 }

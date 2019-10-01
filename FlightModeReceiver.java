@@ -24,17 +24,16 @@ public class FlightModeReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
-
-        Toast.makeText(context, "Flight mode Changed!", Toast.LENGTH_SHORT).show();
         boolean isAirplaneModeOn = intent.getBooleanExtra("state", false);
         if (isAirplaneModeOn) {
-
             // handle Airplane Mode on
+            Toast.makeText(context, "Airplane mode on - NO INTERNET", Toast.LENGTH_SHORT).show();
             _mainActivity.getFlights_LV().setAlpha(0.75f);
             _mainActivity.getFlights_LV().setBackgroundColor(Color.GRAY);
             _mainActivity.getFlights_LV().setEnabled(false);
         } else {
             // handle Airplane Mode off
+            Toast.makeText(context, "Airplane mode off - BACK ONLINE", Toast.LENGTH_SHORT).show();
             _mainActivity.getFlights_LV().setAlpha(1f);
             _mainActivity.getFlights_LV().setBackgroundColor(Color.WHITE);
             _mainActivity.getFlights_LV().setEnabled(true);

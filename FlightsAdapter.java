@@ -20,6 +20,7 @@ public class FlightsAdapter extends ArrayAdapter {
     private int _layout;
     private ArrayList<Flight> _flights;
 
+
     // C'tor
     public FlightsAdapter(Context context, int layout, ArrayList<Flight> flights) {
         super(context, layout, flights);
@@ -116,5 +117,9 @@ public class FlightsAdapter extends ArrayAdapter {
             flightStatusLanded_TV.setText("");
         }
         return result;
+    }
+
+    public ArrayList<Flight> get_flights() {
+        return _flights;
     }
 }

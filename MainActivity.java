@@ -22,19 +22,23 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
     //declare on the fields that we going to use in the MainActivity
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private FlightsAdapter adapter;
+    static FlightsAdapter adapter;
     private ArrayList<Flight> flights = new ArrayList<>();
     private Toolbar toolbar;
     private ListView MainActivity_flights_LV;
+    private DatabaseHelper databaseHelper = new DatabaseHelper(this);
 
 
     @Override
@@ -42,17 +46,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // setting our flight adapter and connecting it to the list view
+        setAdapter();
+
+        // check for when the app is creating and airplane mode is on
+        // more explanation inside the method
+        checkAirplaneModeAndWorkOfflinePref();
+
         // assign id to the toolbar and setting it up so we will have access to the settings
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // registering new broadcast receiver that listen for each time the flight mode is changed
         IntentFilter intentFilter = new IntentFilter("android.intent.action.AIRPLANE_MODE");
-
         getBaseContext().registerReceiver(new FlightModeReceiver(this), intentFilter);
-
-        // setting our flight adapter and connecting it to the list view
-        setAdapter();
 
         // communicating with the FireBase database, more explanation on how it works in the method
         getFlightsAndShowByPreferences();
@@ -109,8 +116,8 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         landedFlightsFilter = Integer.parseInt(flightPreferences.
                                 getString(getString(R.string.PREFERENCES_LATEST_FLIGHTS_KEY), "0"));
-                    }catch (Exception e){
-                        Log.e("MainActivity" , e.getMessage());
+                    } catch (Exception e) {
+                        Log.e("MainActivity", e.getMessage());
                     }
                     if (landedFlightsFilter != 0) {
                         if (!flight.getFlightStatus().equals(getString(R.string.FLIGHT_STATUS_LANDED))) {
@@ -155,6 +162,11 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
+
+                // start service that will backup in Sql lite all the data received
+                // from the database according to the preferences selected
+                Intent intent = new Intent(getBaseContext(), SqlBackupService.class);
+                startService(intent);
             }
 
             @Override
@@ -192,7 +204,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(goToPreferencesIntent);
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -200,4 +211,36 @@ public class MainActivity extends AppCompatActivity {
         return MainActivity_flights_LV;
     }
 
+    // get the work offline preference and check if it's true or false
+    // if it's true we clear the adapter, get all the data from
+    // the sql lite data base, turn the data into Flight Objects
+    // and add it to the adapter
+    private void checkAirplaneModeAndWorkOfflinePref() {
+        SharedPreferences flightPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean workOffline = flightPreferences.getBoolean(
+                getString(R.string.PREFERENCES_WORK_OFFLINE_KEY), false);
+        if (workOffline) {
+            Toast.makeText(this, "No internet - work offline using SQL", Toast.LENGTH_SHORT).show();
+            adapter.clear();
+            Cursor cursor = databaseHelper.getAllFlight();
+            if (cursor.getCount() == 0) {
+                Toast.makeText(this, "no data", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            while (cursor.moveToNext()) {
+                Flight sqlFlight = new Flight();
+                sqlFlight.setAirlineLogo(cursor.getString(1));
+                sqlFlight.setDepartureAirport(cursor.getString(2));
+                sqlFlight.setDepartureCity(cursor.getString(3));
+                sqlFlight.setExpectedLandingTime(cursor.getString(4));
+                sqlFlight.setFinalLandingTime(cursor.getString(5));
+                sqlFlight.setFlightNumber(cursor.getString(6));
+                sqlFlight.setFlightStatus(cursor.getString(7));
+                adapter.add(sqlFlight);
+            }
+        }
+    }
+
 }
+
+

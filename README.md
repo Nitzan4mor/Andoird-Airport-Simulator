@@ -29,6 +29,7 @@ the app as the following features -
   - show only flights that have not landed yet
   - show only fligts that have landed using a time filter
   the app will still listen to changes in the database and will change the display accordingly to both the change that was made and the settings that was chosen 
+  - work offline using backup data in SQLite when the airplane mode is on
   
  5. the app have a Receiver that is connected to the Device's airplane mode and will "freeze" the screen if the airplane mode is on
  
@@ -40,6 +41,7 @@ the app as the following features -
   - a return button that allows you to go back to the Main Activity
   
   7. the app have a backup service using SQLite with the followin features - 
-  - each time the app is created and each time data has been changed in the fire base, the service will backup the data in a SQLite data base according to the preferences selected in the settings.
+  - each time the app is created and each time data has been changed in the fire base, the service will backup the data in a SQLite data base according to the display preferences selected in the settings.
+  - if the work offline preference is on and the airplane mode is on, the app will display the data that is saved in the SQLite data base (according to the display preferences that was chosen) until the air plane mode is off.
   
   ** all of the Java code have notes with explanations **
